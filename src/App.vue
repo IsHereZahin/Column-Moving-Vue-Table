@@ -1,8 +1,9 @@
 <template>
-    <ThemeSwitcher />
+<ThemeSwitcher />
     <div class="card">
-        <DataTable v-model:filters="filters" :value="customers" paginator showGridlines :rows="10" dataKey="id"
-                filterDisplay="menu" :loading="loading" :globalFilterFields="['name', 'country.name', 'representative.name', 'balance', 'status']">
+        <DataTable name="column-move" tag="DataTable" v-model:filters="filters" :value="customers" paginator showGridlines :rows="10" dataKey="id"
+                         filterDisplay="menu" :loading="loading" :globalFilterFields="['name', 'country.name', 'representative.name', 'balance', 'status']"
+                         reorderableColumns>
             <template #header>
                 <div class="flex justify-between">
                     <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter()" />
@@ -16,7 +17,7 @@
             </template>
             <template #empty> No customers found. </template>
             <template #loading> Loading customers data. Please wait. </template>
-            <Column field="name" header="Name" style="min-width: 12rem">
+            <Column field="name" header="Name" style="min-width: 12rem" columnKey="name">
                 <template #body="{ data }">
                     {{ data.name }}
                 </template>
@@ -24,7 +25,7 @@
                     <InputText v-model="filterModel.value" type="text" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column header="Country" filterField="country.name" style="min-width: 12rem">
+            <Column header="Country" filterField="country.name" style="min-width: 12rem" columnKey="country.name">
                 <template #body="{ data }">
                     <div class="flex items-center gap-2">
                         <img alt="flag" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`flag flag-${data.country.code}`" style="width: 24px" />
@@ -44,7 +45,7 @@
                     <div class="px-4 pt-0 pb-4 text-center">Customized Buttons</div>
                 </template>
             </Column>
-            <Column header="Agent" filterField="representative" :showFilterMatchModes="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+            <Column header="Agent" filterField="representative" :showFilterMatchModes="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem" columnKey="representative">
                 <template #body="{ data }">
                     <div class="flex items-center gap-2">
                         <img :alt="data.representative.name" :src="`https://primefaces.org/cdn/primevue/images/avatar/${data.representative.image}`" style="width: 32px" />
@@ -62,7 +63,7 @@
                     </MultiSelect>
                 </template>
             </Column>
-            <Column header="Date" filterField="date" dataType="date" style="min-width: 10rem">
+            <Column header="Date" filterField="date" dataType="date" style="min-width: 10rem" columnKey="date">
                 <template #body="{ data }">
                     {{ formatDate(data.date) }}
                 </template>
@@ -70,7 +71,7 @@
                     <DatePicker v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
                 </template>
             </Column>
-            <Column header="Balance" filterField="balance" dataType="numeric" style="min-width: 10rem">
+            <Column header="Balance" filterField="balance" dataType="numeric" style="min-width: 10rem" columnKey="balance">
                 <template #body="{ data }">
                     {{ formatCurrency(data.balance) }}
                 </template>
@@ -78,7 +79,7 @@
                     <InputNumber v-model="filterModel.value" mode="currency" currency="USD" locale="en-US" />
                 </template>
             </Column>
-            <Column header="Status" field="status" :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
+            <Column header="Status" field="status" :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem" columnKey="status">
                 <template #body="{ data }">
                     <Tag :value="data.status" :severity="getSeverity(data.status)" />
                 </template>
@@ -90,7 +91,7 @@
                     </Select>
                 </template>
             </Column>
-            <Column field="activity" header="Activity" :showFilterMatchModes="false" style="min-width: 12rem">
+            <Column field="activity" header="Activity" :showFilterMatchModes="false" style="min-width: 12rem" columnKey="activity">
                 <template #body="{ data }">
                     <ProgressBar :value="data.activity" :showValue="false" style="height: 6px"></ProgressBar>
                 </template>
@@ -102,7 +103,7 @@
                     </div>
                 </template>
             </Column>
-            <Column field="verified" header="Verified" dataType="boolean" bodyClass="text-center" style="min-width: 8rem">
+            <Column field="verified" header="Verified" dataType="boolean" bodyClass="text-center" style="min-width: 8rem" columnKey="verified">
                 <template #body="{ data }">
                     <i class="pi" :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
                 </template>
@@ -204,3 +205,8 @@ export default {
     }
 };
 </script>
+<style scoped>
+.column-dragging {
+    transition: transform 0.2s ease-in-out;
+}
+</style>
